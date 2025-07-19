@@ -49,18 +49,42 @@ class _TransactionFormState extends State<TransactionForm> {
               controller: valueController,
               decoration: const InputDecoration(labelText: 'Valor (R\$)'),
             ),
+            SizedBox(
+              height: 70,
+              child: Row(
+                children: [
+                  const Text('data'),
+                  TextButton(
+                      onPressed: () {
+                        showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime.now(),
+                          // locale: Localizations.localeOf(context)
+                          // locale: Locale("pt","BR")
+                        );
+                      },
+                      child: Text(
+                        'Selecionar data',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      ))
+                ],
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
+                ElevatedButton(
                   onPressed: () {
-                   _onSubmit();
+                    _onSubmit();
                   },
-                  child: Text('Nova transação',
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold)),
+                  child: const Text('Nova transação',
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                 ),
               ],
             )

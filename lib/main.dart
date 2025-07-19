@@ -18,15 +18,22 @@ class ExpensesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+    //   localizationsDelegates: [
+    //   // GlobalWidgetsLocalizations.delegate,
+    //   // GlobalMaterialLocalizations.delegate,
+    // ],
+    // supportedLocales: [Locale("pt", "BR")],
+      debugShowCheckedModeBanner: false,
         home: const MyHomePage(),
         theme: ThemeData(
           useMaterial3: false,
           fontFamily: 'Quicksand',
           textTheme: ThemeData.light().textTheme.copyWith(
-              titleLarge: const TextStyle(
-                  fontFamily: 'OpenSans',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900)),
+                titleLarge: const TextStyle(
+                    fontFamily: 'OpenSans',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900),
+              ),
           appBarTheme: const AppBarTheme(
             titleTextStyle: TextStyle(
                 fontFamily: 'OpenSans',
@@ -37,7 +44,7 @@ class ExpensesApp extends StatelessWidget {
           ),
           colorScheme: ColorScheme.fromSeed(
             seedColor: Colors.amber,
-            primary: Colors.green,
+            primary: Colors.purple,
             secondary: Colors.amber,
           ),
         ));
@@ -53,24 +60,42 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transactions = [
-    // Transaction(
-    //     id: Random().nextDouble().toString(),
-    //     title: 'Cocada',
-    //     value: 9,
-    //     date: DateTime.now().subtract(Duration(days: 20)),
-    //   ),
-    //   Transaction(
-    //     id: Random().nextDouble().toString(),
-    //     title: 'Cocada',
-    //     value: 9,
-    //     date: DateTime.now().subtract(Duration(days: 5)),
-    //   ),
-    //   Transaction(
-    //     id: Random().nextDouble().toString(),
-    //     title: 'Cocada',
-    //     value: 9,
-    //     date: DateTime.now().subtract(Duration(days: 7)),
-    //   ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Cocada',
+      value: 9,
+      date: DateTime.now().subtract(Duration(days: 20)),
+    ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Coca',
+      value: 9,
+      date: DateTime.now().subtract(Duration(days: 5)),
+    ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Feijão',
+      value: 9,
+      date: DateTime.now().subtract(Duration(days: 7)),
+    ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Refri Dight',
+      value: 100,
+      date: DateTime.now().subtract(Duration(days: 20)),
+    ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Lua',
+      value: 9000,
+      date: DateTime.now().subtract(Duration(days: 5)),
+    ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Cinema',
+      value: 25,
+      date: DateTime.now().subtract(Duration(days: 7)),
+    ),
   ];
 
   _addTransaction(String title, double value) {
@@ -82,17 +107,18 @@ class _MyHomePageState extends State<MyHomePage> {
         date: DateTime.now(),
       ));
     });
-
-    Navigator.of(context).pop;
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         title: const Text(
           'Despesas Pessoais',
+          style: TextStyle(color: Colors.white),
         ),
       ),
       body: Padding(
