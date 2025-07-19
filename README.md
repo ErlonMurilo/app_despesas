@@ -1,4 +1,5 @@
-# app_despesas
+# Aplicativo de controle de despesas pessoais
+## Aplicativo que auxilía o usuario no auto gerenciamento de gastos
 
 A new Flutter project.
 
