@@ -53,24 +53,24 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transactions = [
-    Transaction(
-        id: Random().nextDouble().toString(),
-        title: 'Cocada',
-        value: 9,
-        date: DateTime.now().subtract(Duration(days: 20)),
-      ),
-      Transaction(
-        id: Random().nextDouble().toString(),
-        title: 'Cocada',
-        value: 9,
-        date: DateTime.now().subtract(Duration(days: 5)),
-      ),
-      Transaction(
-        id: Random().nextDouble().toString(),
-        title: 'Cocada',
-        value: 9,
-        date: DateTime.now().subtract(Duration(days: 7)),
-      ),
+    // Transaction(
+    //     id: Random().nextDouble().toString(),
+    //     title: 'Cocada',
+    //     value: 9,
+    //     date: DateTime.now().subtract(Duration(days: 20)),
+    //   ),
+    //   Transaction(
+    //     id: Random().nextDouble().toString(),
+    //     title: 'Cocada',
+    //     value: 9,
+    //     date: DateTime.now().subtract(Duration(days: 5)),
+    //   ),
+    //   Transaction(
+    //     id: Random().nextDouble().toString(),
+    //     title: 'Cocada',
+    //     value: 9,
+    //     date: DateTime.now().subtract(Duration(days: 7)),
+    //   ),
   ];
 
   _addTransaction(String title, double value) {

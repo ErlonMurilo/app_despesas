@@ -33,7 +33,6 @@ class _ChartState extends State<Chart> {
 
   @override
   Widget build(BuildContext context) {
-    print(groupedTransactions);
 
     return Card(
         elevation: 5,
