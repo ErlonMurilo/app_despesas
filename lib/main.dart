@@ -5,6 +5,7 @@ import 'package:app_despesas/components/transaction_form.dart';
 import 'package:app_despesas/components/transaction_list.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'models/transaction.dart';
 
@@ -18,12 +19,14 @@ class ExpensesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-    //   localizationsDelegates: [
-    //   // GlobalWidgetsLocalizations.delegate,
-    //   // GlobalMaterialLocalizations.delegate,
-    // ],
-    // supportedLocales: [Locale("pt", "BR")],
-      debugShowCheckedModeBanner: false,
+        localizationsDelegates: const [
+          GlobalWidgetsLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale("pt", "BR")
+        ],
+        debugShowCheckedModeBanner: false,
         home: const MyHomePage(),
         theme: ThemeData(
           useMaterial3: false,
@@ -60,54 +63,62 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transactions = [
-    Transaction(
-      id: Random().nextDouble().toString(),
-      title: 'Cocada',
-      value: 9,
-      date: DateTime.now().subtract(Duration(days: 20)),
-    ),
-    Transaction(
-      id: Random().nextDouble().toString(),
-      title: 'Coca',
-      value: 9,
-      date: DateTime.now().subtract(Duration(days: 5)),
-    ),
-    Transaction(
-      id: Random().nextDouble().toString(),
-      title: 'Feijão',
-      value: 9,
-      date: DateTime.now().subtract(Duration(days: 7)),
-    ),
-    Transaction(
-      id: Random().nextDouble().toString(),
-      title: 'Refri Dight',
-      value: 100,
-      date: DateTime.now().subtract(Duration(days: 20)),
-    ),
-    Transaction(
-      id: Random().nextDouble().toString(),
-      title: 'Lua',
-      value: 9000,
-      date: DateTime.now().subtract(Duration(days: 5)),
-    ),
-    Transaction(
-      id: Random().nextDouble().toString(),
-      title: 'Cinema',
-      value: 25,
-      date: DateTime.now().subtract(Duration(days: 7)),
-    ),
+    // Transaction(
+    //   id: Random().nextDouble().toString(),
+    //   title: 'Cocada',
+    //   value: 9,
+    //   date: DateTime.now().subtract(Duration(days: 20)),
+    // ),
+    // Transaction(
+    //   id: Random().nextDouble().toString(),
+    //   title: 'Coca',
+    //   value: 9,
+    //   date: DateTime.now().subtract(Duration(days: 5)),
+    // ),
+    // Transaction(
+    //   id: Random().nextDouble().toString(),
+    //   title: 'Feijão',
+    //   value: 9,
+    //   date: DateTime.now().subtract(Duration(days: 7)),
+    // ),
+    // Transaction(
+    //   id: Random().nextDouble().toString(),
+    //   title: 'Refri Dight',
+    //   value: 100,
+    //   date: DateTime.now().subtract(Duration(days: 20)),
+    // ),
+    // Transaction(
+    //   id: Random().nextDouble().toString(),
+    //   title: 'Lua',
+    //   value: 9000,
+    //   date: DateTime.now().subtract(Duration(days: 5)),
+    // ),
+    // Transaction(
+    //   id: Random().nextDouble().toString(),
+    //   title: 'Cinema',
+    //   value: 25,
+    //   date: DateTime.now().subtract(Duration(days: 7)),
+    // ),
   ];
 
-  _addTransaction(String title, double value) {
+  _addTransaction(String title, double value, DateTime date) {
     setState(() {
       _transactions.add(Transaction(
         id: Random().nextDouble().toString(),
         title: title,
         value: value,
-        date: DateTime.now(),
+        date: date,
       ));
     });
     Navigator.of(context).pop();
+  }
+
+  _removeTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((tr) {
+        return tr.id == id;
+      });
+    });
   }
 
   @override
@@ -124,9 +135,10 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 15),
         child:
-            Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           Chart(_transactions),
-          TransactionList(_transactions),
+          TransactionList(_transactions, _removeTransaction),
         ]),
       ),
       floatingActionButton: FloatingActionButton(

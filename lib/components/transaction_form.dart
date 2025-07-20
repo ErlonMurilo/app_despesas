@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TransactionForm extends StatefulWidget {
-  final void Function(String, double) onSubmit;
+  final void Function(String, double, DateTime) onSubmit;
 
   const TransactionForm(this.onSubmit, {super.key});
 
@@ -11,8 +12,8 @@ class TransactionForm extends StatefulWidget {
 
 class _TransactionFormState extends State<TransactionForm> {
   final titleController = TextEditingController();
-
   final valueController = TextEditingController();
+  DateTime _selectDate = DateTime.now();
 
   _onSubmit() {
     final title = titleController.text;
@@ -22,7 +23,7 @@ class _TransactionFormState extends State<TransactionForm> {
       return;
     }
 
-    widget.onSubmit(title, value);
+    widget.onSubmit(title, value, _selectDate);
   }
 
   @override
@@ -53,17 +54,24 @@ class _TransactionFormState extends State<TransactionForm> {
               height: 70,
               child: Row(
                 children: [
-                  const Text('data'),
+                  Expanded(
+                      flex: 2,
+                      child: Text(
+                          'Data selecionada: ${DateFormat('dd/MM/yyyy').format(_selectDate)}')),
                   TextButton(
                       onPressed: () {
                         showDatePicker(
                           context: context,
                           initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
+                          firstDate: DateTime(2020),
                           lastDate: DateTime.now(),
-                          // locale: Localizations.localeOf(context)
-                          // locale: Locale("pt","BR")
-                        );
+                        ).then((pickedDate) {
+                          setState(() {
+                            pickedDate == null
+                                ? null
+                                : _selectDate = pickedDate;
+                          });
+                        });
                       },
                       child: Text(
                         'Selecionar data',

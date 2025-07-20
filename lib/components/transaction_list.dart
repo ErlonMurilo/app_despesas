@@ -2,16 +2,22 @@ import 'package:app_despesas/models/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class TransactionList extends StatelessWidget {
+class TransactionList extends StatefulWidget {
   final List<Transaction> transactions;
+  final Function(String id) _onRemove;
 
-  const TransactionList(this.transactions, {super.key});
+  const TransactionList(this.transactions, this._onRemove, {super.key});
 
+  @override
+  State<TransactionList> createState() => _TransactionListState();
+}
+
+class _TransactionListState extends State<TransactionList> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 300,
-      child: transactions.isEmpty
+      height: 420,
+      child: widget.transactions.isEmpty
           ? Column(children: [
               Text(
                 'Nenhuma transação encontrada',
@@ -21,9 +27,9 @@ class TransactionList extends StatelessWidget {
               Image.asset('assets/images/waiting.png', height: 200)
             ])
           : ListView.builder(
-              itemCount: transactions.length,
+              itemCount: widget.transactions.length,
               itemBuilder: (context, index) {
-                final tr = transactions[index];
+                final tr = widget.transactions[index];
                 return Card(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -34,7 +40,7 @@ class TransactionList extends StatelessWidget {
                     leading: CircleAvatar(
                       radius: 30,
                       child: Padding(
-                        padding: const EdgeInsets.all(6.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: FittedBox(
                           child: Text(
                             'R\$ ${tr.value.toStringAsFixed(2)}',
@@ -46,40 +52,17 @@ class TransactionList extends StatelessWidget {
                     subtitle: Text(
                       DateFormat('dd MMM yyyy').format(tr.date),
                     ),
+                    trailing: IconButton(
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                      ),
+                      onPressed: () {
+                        widget._onRemove(tr.id);
+                      },
+                    ),
                   ),
                 );
-
-                // Card(
-                //     child: Row(
-                //   children: [
-                //     Container(
-                //       margin: const EdgeInsets.symmetric(
-                //           horizontal: 15, vertical: 10),
-                //       padding: const EdgeInsets.all(10),
-                //       decoration: BoxDecoration(
-                //           border: Border.all(
-                //               width: 2,
-                //               color: Theme.of(context).colorScheme.primary)),
-                //       child: Text('R\$ ${tr.value.toStringAsFixed(2)}',
-                //           style: TextStyle(
-                //               color: Theme.of(context).colorScheme.primary,
-                //               fontSize: 20,
-                //               fontWeight: FontWeight.bold)),
-                //     ),
-                //     Column(
-                //       crossAxisAlignment: CrossAxisAlignment.start,
-                //       children: [
-                //         Text(tr.title,
-                //             style: Theme.of(context).textTheme.titleLarge
-                //             ),
-                //         Text(
-                //           DateFormat('dd MMM yyyy').format(tr.date),
-                //           style: const TextStyle(color: Colors.grey),
-                //         )
-                //       ],
-                //     )
-                //   ],
-                // ));
               },
             ),
     );

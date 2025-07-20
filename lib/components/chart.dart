@@ -29,7 +29,7 @@ class _ChartState extends State<Chart> {
         }
       }
 
-      return {'day': DateFormat.E().format(weekDay), 'value': value};
+      return {'day': DateFormat.E('pt_BR').format(weekDay) , 'value': value};
     }).reversed.toList();
   }
 
@@ -57,7 +57,7 @@ class _ChartState extends State<Chart> {
                   child: 
                   ChartBar(
                       label: listGrouped[index]['day'].toString(),
-                      porcentagem:
+                      porcentagem: _valorTotal(listGrouped)== 0 ? 0 : 
                           double.parse(listGrouped[index]['value'].toString()) /
                               _valorTotal(listGrouped),
                       value: double.parse(listGrouped[index]['value'].toString())),
