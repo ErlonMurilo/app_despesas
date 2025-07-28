@@ -13,7 +13,6 @@ class Chart extends StatefulWidget {
 }
 
 class _ChartState extends State<Chart> {
-
   List<Map<String, Object>> get groupedTransactions {
     return List.generate(7, (index) {
       final weekDay = DateTime.now().subtract(Duration(days: index));
@@ -29,12 +28,12 @@ class _ChartState extends State<Chart> {
         }
       }
 
-      return {'day': DateFormat.E('pt_BR').format(weekDay) , 'value': value};
+      return {'day': DateFormat.E('pt_BR').format(weekDay), 'value': value};
     }).reversed.toList();
   }
 
-  double _valorTotal(groupedTransactions){
-    return groupedTransactions.fold(0, (sum, tr){
+  double _valorTotal(groupedTransactions) {
+    return groupedTransactions.fold(0, (sum, tr) {
       return sum += (tr['value'] as double);
     });
   }
@@ -51,18 +50,18 @@ class _ChartState extends State<Chart> {
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: List.generate(listGrouped.length, (index) {
-                return 
-                Flexible(
+                return Flexible(
                   fit: FlexFit.tight,
-                  child: 
-                  ChartBar(
+                  child: ChartBar(
                       label: listGrouped[index]['day'].toString(),
-                      porcentagem: _valorTotal(listGrouped)== 0 ? 0 : 
-                          double.parse(listGrouped[index]['value'].toString()) /
+                      porcentagem: _valorTotal(listGrouped) == 0
+                          ? 0
+                          : double.parse(
+                                  listGrouped[index]['value'].toString()) /
                               _valorTotal(listGrouped),
-                      value: double.parse(listGrouped[index]['value'].toString())),
-                )
-                ;
+                      value:
+                          double.parse(listGrouped[index]['value'].toString())),
+                );
               })),
         ));
   }

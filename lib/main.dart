@@ -63,43 +63,45 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transactions = [
-    // Transaction(
-    //   id: Random().nextDouble().toString(),
-    //   title: 'Cocada',
-    //   value: 9,
-    //   date: DateTime.now().subtract(Duration(days: 20)),
-    // ),
-    // Transaction(
-    //   id: Random().nextDouble().toString(),
-    //   title: 'Coca',
-    //   value: 9,
-    //   date: DateTime.now().subtract(Duration(days: 5)),
-    // ),
-    // Transaction(
-    //   id: Random().nextDouble().toString(),
-    //   title: 'Feijão',
-    //   value: 9,
-    //   date: DateTime.now().subtract(Duration(days: 7)),
-    // ),
-    // Transaction(
-    //   id: Random().nextDouble().toString(),
-    //   title: 'Refri Dight',
-    //   value: 100,
-    //   date: DateTime.now().subtract(Duration(days: 20)),
-    // ),
-    // Transaction(
-    //   id: Random().nextDouble().toString(),
-    //   title: 'Lua',
-    //   value: 9000,
-    //   date: DateTime.now().subtract(Duration(days: 5)),
-    // ),
-    // Transaction(
-    //   id: Random().nextDouble().toString(),
-    //   title: 'Cinema',
-    //   value: 25,
-    //   date: DateTime.now().subtract(Duration(days: 7)),
-    // ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Cocada',
+      value: 9,
+      date: DateTime.now().subtract(const Duration(days: 20)),
+    ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Coca',
+      value: 9,
+      date: DateTime.now().subtract(const Duration(days: 5)),
+    ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Feijão',
+      value: 9,
+      date: DateTime.now().subtract(const Duration(days: 7)),
+    ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Refri Dight',
+      value: 100,
+      date: DateTime.now().subtract(const Duration(days: 20)),
+    ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Lua',
+      value: 9000,
+      date: DateTime.now().subtract(const Duration(days: 5)),
+    ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Cinema',
+      value: 25,
+      date: DateTime.now().subtract(const Duration(days: 7)),
+    ),
   ];
+
+  bool _showChart = false;
 
   _addTransaction(String title, double value, DateTime date) {
     setState(() {
@@ -121,35 +123,85 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  _openTransactionFormModal() {
+    return showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return TransactionForm(_addTransaction);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
+    final appBar = AppBar(
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      title: Text(
+        'Despesas Pessoais',
+        style: TextStyle(
+            color: Colors.white,
+            fontSize: 20 * MediaQuery.textScalerOf(context).scale(1)),
+      ),
+      actions: [
+        if (isLandscape)
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  _showChart = !_showChart;
+                });
+              },
+              icon: Icon(_showChart ? Icons.list: Icons.show_chart)),
+        IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: _openTransactionFormModal,
+        )
+      ],
+    );
+    final availableHeight = MediaQuery.of(context).size.height -
+        appBar.preferredSize.height -
+        MediaQuery.of(context).padding.top;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: const Text(
-          'Despesas Pessoais',
-          style: TextStyle(color: Colors.white),
+      appBar: appBar,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            // if (isLandscape)
+            //   Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       const Text('Exibir Gráfico'),
+            //       Switch(
+            //         value: _showChart,
+            //         onChanged: (value) {
+            //           setState(() {
+            //             _showChart = value;
+            //           });
+            //         },
+            //       ),
+            //     ],
+            //   ),
+            if (!isLandscape || _showChart)
+              SizedBox(
+                height: availableHeight * (isLandscape ? 0.7 : 0.3),
+                child: Chart(_transactions),
+              ),
+            if (!isLandscape || !_showChart)
+              SizedBox(
+                height: availableHeight * 0.7,
+                child: TransactionList(_transactions, _removeTransaction),
+              ),
+          ]),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 15),
-        child:
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          Chart(_transactions),
-          TransactionList(_transactions, _removeTransaction),
-        ]),
-      ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            builder: (_) {
-              return TransactionForm(_addTransaction);
-            },
-          );
-        },
+        onPressed: _openTransactionFormModal,
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

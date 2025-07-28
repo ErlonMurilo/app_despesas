@@ -15,56 +15,58 @@ class TransactionList extends StatefulWidget {
 class _TransactionListState extends State<TransactionList> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 420,
-      child: widget.transactions.isEmpty
-          ? Column(children: [
+    return widget.transactions.isEmpty
+        ? LayoutBuilder(
+          builder: (ctx, constraints){
+            return Column(children: [
               Text(
                 'Nenhuma transação encontrada',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const Spacer(),
-              Image.asset('assets/images/waiting.png', height: 200)
-            ])
-          : ListView.builder(
-              itemCount: widget.transactions.length,
-              itemBuilder: (context, index) {
-                final tr = widget.transactions[index];
-                return Card(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  elevation: 5,
-                  child: ListTile(
-                    titleTextStyle: Theme.of(context).textTheme.titleLarge,
-                    subtitleTextStyle: const TextStyle(color: Colors.grey),
-                    leading: CircleAvatar(
-                      radius: 30,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: FittedBox(
-                          child: Text(
-                            'R\$ ${tr.value.toStringAsFixed(2)}',
-                          ),
+              Image.asset('assets/images/waiting.png', height: constraints.maxHeight*0.8,)
+            ]);
+          },
+          
+        )
+        : ListView.builder(
+            itemCount: widget.transactions.length,
+            itemBuilder: (context, index) {
+              final tr = widget.transactions[index];
+              return Card(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                elevation: 5,
+                child: ListTile(
+                  titleTextStyle: Theme.of(context).textTheme.titleLarge,
+                  subtitleTextStyle: const TextStyle(color: Colors.grey),
+                  leading: CircleAvatar(
+                    radius: 30,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: FittedBox(
+                        child: Text(
+                          'R\$ ${tr.value.toStringAsFixed(2)}',
                         ),
                       ),
                     ),
-                    title: Text(tr.title),
-                    subtitle: Text(
-                      DateFormat('dd MMM yyyy').format(tr.date),
-                    ),
-                    trailing: IconButton(
-                      icon: const Icon(
-                        Icons.delete,
-                        color: Colors.red,
-                      ),
-                      onPressed: () {
-                        widget._onRemove(tr.id);
-                      },
-                    ),
                   ),
-                );
-              },
-            ),
-    );
+                  title: Text(tr.title),
+                  subtitle: Text(
+                    DateFormat('dd MMM yyyy').format(tr.date),
+                  ),
+                  trailing: IconButton(
+                    icon: const Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
+                    onPressed: () {
+                      widget._onRemove(tr.id);
+                    },
+                  ),
+                ),
+              );
+            },
+          );
   }
 }

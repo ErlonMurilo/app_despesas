@@ -28,77 +28,90 @@ class _TransactionFormState extends State<TransactionForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            TextField(
-              onSubmitted: (value) {
-                _onSubmit();
-              },
-              controller: titleController,
-              decoration: const InputDecoration(labelText: 'Título'),
-            ),
-            TextField(
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              onSubmitted: (value) {
-                _onSubmit();
-              },
-              controller: valueController,
-              decoration: const InputDecoration(labelText: 'Valor (R\$)'),
-            ),
-            SizedBox(
-              height: 70,
-              child: Row(
-                children: [
-                  Expanded(
-                      flex: 2,
-                      child: Text(
-                          'Data selecionada: ${DateFormat('dd/MM/yyyy').format(_selectDate)}')),
-                  TextButton(
-                      onPressed: () {
-                        showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2020),
-                          lastDate: DateTime.now(),
-                        ).then((pickedDate) {
-                          setState(() {
-                            pickedDate == null
-                                ? null
-                                : _selectDate = pickedDate;
-                          });
-                        });
-                      },
-                      child: Text(
-                        'Selecionar data',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      ))
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+    return LayoutBuilder(
+      builder: (ctx, constraints) {
+        return Card(
+          elevation: 5,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    _onSubmit();
-                  },
-                  child: const Text('Nova transação',
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                SizedBox(
+                  height: constraints.maxHeight * 0.2,
+                  child: TextField(
+                    onSubmitted: (value) {
+                      _onSubmit();
+                    },
+                    controller: titleController,
+                    decoration: const InputDecoration(labelText: 'Título'),
+                  ),
                 ),
+                SizedBox(
+                  height: constraints.maxHeight * 0.2,
+                  child: TextField(
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    onSubmitted: (value) {
+                      _onSubmit();
+                    },
+                    controller: valueController,
+                    decoration: const InputDecoration(labelText: 'Valor (R\$)'),
+                  ),
+                ),
+                SizedBox(
+                  height: constraints.maxHeight * 0.2,
+                  child: Row(
+                    children: [
+                      Expanded(
+                          flex: 2,
+                          child: Text(
+                              'Data selecionada: ${DateFormat('dd/MM/yyyy').format(_selectDate)}')),
+                      TextButton(
+                          onPressed: () {
+                            showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2020),
+                              lastDate: DateTime.now(),
+                            ).then((pickedDate) {
+                              setState(() {
+                                pickedDate == null
+                                    ? null
+                                    : _selectDate = pickedDate;
+                              });
+                            });
+                          },
+                          child: Text(
+                            'Selecionar data',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold),
+                          ))
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: constraints.maxHeight * 0.2,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          _onSubmit();
+                        },
+                        child: const Text('Nova transação',
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                )
               ],
-            )
-          ],
-        ),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
