@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:app_despesas/components/chart.dart';
 import 'package:app_despesas/components/transaction_form.dart';
 import 'package:app_despesas/components/transaction_list.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -134,77 +136,96 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    bool isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
+    final mediaQuery = MediaQuery.of(context);
+    bool isLandscape = mediaQuery.orientation == Orientation.landscape;
 
-    final appBar = AppBar(
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      title: Text(
-        'Despesas Pessoais',
-        style: TextStyle(
-            color: Colors.white,
-            fontSize: 20 * MediaQuery.textScalerOf(context).scale(1)),
-      ),
-      actions: [
-        if (isLandscape)
-          IconButton(
-              onPressed: () {
-                setState(() {
-                  _showChart = !_showChart;
-                });
-              },
-              icon: Icon(_showChart ? Icons.list: Icons.show_chart)),
-        IconButton(
-          icon: const Icon(Icons.add),
-          onPressed: _openTransactionFormModal,
-        )
-      ],
-    );
-    final availableHeight = MediaQuery.of(context).size.height -
+    final PreferredSizeWidget appBar = Platform.isAndroid
+        ? AppBar(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            title: Text(
+              'Despesas Pessoais',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20 * MediaQuery.textScalerOf(context).scale(1)),
+            ),
+            actions: [
+              if (isLandscape)
+                IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _showChart = !_showChart;
+                      });
+                    },
+                    icon: Icon(_showChart ? Icons.list : Icons.show_chart)),
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: _openTransactionFormModal,
+              )
+            ],
+          )
+        : CupertinoNavigationBar(
+            middle: Text(
+              'Despesas Pessoais',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20 * MediaQuery.textScalerOf(context).scale(1)),
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isLandscape)
+                  IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _showChart = !_showChart;
+                        });
+                      },
+                      icon: Icon(_showChart ? Icons.list : Icons.show_chart)),
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: _openTransactionFormModal,
+                )
+              ],
+            ),
+          );
+
+    final availableHeight = mediaQuery.size.height -
         appBar.preferredSize.height -
-        MediaQuery.of(context).padding.top;
+        mediaQuery.padding.top;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: appBar,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            // if (isLandscape)
-            //   Row(
-            //     mainAxisAlignment: MainAxisAlignment.center,
-            //     children: [
-            //       const Text('Exibir Gráfico'),
-            //       Switch(
-            //         value: _showChart,
-            //         onChanged: (value) {
-            //           setState(() {
-            //             _showChart = value;
-            //           });
-            //         },
-            //       ),
-            //     ],
-            //   ),
-            if (!isLandscape || _showChart)
-              SizedBox(
-                height: availableHeight * (isLandscape ? 0.7 : 0.3),
-                child: Chart(_transactions),
-              ),
-            if (!isLandscape || !_showChart)
-              SizedBox(
-                height: availableHeight * 0.7,
-                child: TransactionList(_transactions, _removeTransaction),
-              ),
-          ]),
-        ),
+    final bodyPage = SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        child:
+            Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          if (!isLandscape || _showChart)
+            SizedBox(
+              height: availableHeight * (isLandscape ? 0.7 : 0.3),
+              child: Chart(_transactions),
+            ),
+          if (!isLandscape || !_showChart)
+            SizedBox(
+              height: availableHeight * (isLandscape ? 1 : 0.7),
+              child: TransactionList(_transactions, _removeTransaction),
+            ),
+        ]),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _openTransactionFormModal,
-        child: const Icon(Icons.add),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
+
+    return Platform.isAndroid
+        ? Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: appBar,
+            body: bodyPage,
+            floatingActionButton: FloatingActionButton(
+              onPressed: _openTransactionFormModal,
+              child: const Icon(Icons.add),
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+          )
+        : CupertinoPageScaffold(
+            child: bodyPage,
+          );
   }
 }

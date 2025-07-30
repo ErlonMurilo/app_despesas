@@ -17,18 +17,20 @@ class _TransactionListState extends State<TransactionList> {
   Widget build(BuildContext context) {
     return widget.transactions.isEmpty
         ? LayoutBuilder(
-          builder: (ctx, constraints){
-            return Column(children: [
-              Text(
-                'Nenhuma transação encontrada',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const Spacer(),
-              Image.asset('assets/images/waiting.png', height: constraints.maxHeight*0.8,)
-            ]);
-          },
-          
-        )
+            builder: (ctx, constraints) {
+              return Column(children: [
+                Text(
+                  'Nenhuma transação encontrada',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const Spacer(),
+                Image.asset(
+                  'assets/images/waiting.png',
+                  height: constraints.maxHeight * 0.8,
+                )
+              ]);
+            },
+          )
         : ListView.builder(
             itemCount: widget.transactions.length,
             itemBuilder: (context, index) {
@@ -55,15 +57,28 @@ class _TransactionListState extends State<TransactionList> {
                   subtitle: Text(
                     DateFormat('dd MMM yyyy').format(tr.date),
                   ),
-                  trailing: IconButton(
-                    icon: const Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    ),
-                    onPressed: () {
-                      widget._onRemove(tr.id);
-                    },
-                  ),
+                  trailing: MediaQuery.of(context).size.width > 480
+                      ? TextButton.icon(
+                          onPressed: () {
+                            widget._onRemove(tr.id);
+                          },
+                          icon: const Icon(Icons.delete),
+                          label: const Text('Exluir'),
+                          style: const ButtonStyle(
+                            foregroundColor: WidgetStatePropertyAll(
+                              Color.fromARGB(255, 255, 0, 0),
+                            ),
+                          ),
+                        )
+                      : IconButton(
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
+                          onPressed: () {
+                            widget._onRemove(tr.id);
+                          },
+                        ),
                 ),
               );
             },
